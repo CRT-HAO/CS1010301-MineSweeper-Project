@@ -35,7 +35,7 @@ namespace ms
 
         void setSize(size_t width, size_t height);
 
-        bool putBomb(const Pos &pos);
+        bool putMine(const Pos &pos);
 
         void calcMines();
 

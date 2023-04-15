@@ -1,4 +1,4 @@
-#include "Board.hpp"
+#include "core/Board.hpp"
 
 using namespace ms;
 
@@ -19,7 +19,7 @@ void Board::restart()
     this->_board.clear();
 }
 
-bool Board::putBomb(const Pos &pos)
+bool Board::putMine(const Pos &pos)
 {
     if ( !this->inside(pos) )
         return false;
