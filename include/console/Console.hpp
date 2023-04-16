@@ -2,7 +2,7 @@
 
 #include "core/Board.hpp"
 
-namespace ms
+namespace minesweeper
 {
 
     class Console

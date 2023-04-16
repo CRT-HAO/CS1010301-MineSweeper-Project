@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace ms
+namespace minesweeper
 {
 
     typedef std::vector<std::vector<Field>> Board_t;

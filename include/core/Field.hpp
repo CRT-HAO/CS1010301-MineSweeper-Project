@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-namespace ms
+namespace minesweeper
 {
 
     class Field

@@ -3,11 +3,13 @@
 #include <iostream>
 
 using namespace std;
-using namespace ms;
+using namespace minesweeper;
 
 int main(int argc, char *argv[])
 {
     Game game(argc, argv);
+
+    game.initialize();
 
     for ( ;; )
         game.update();

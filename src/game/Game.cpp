@@ -2,11 +2,14 @@
 
 #include <iostream>
 
-using namespace ms;
+using namespace minesweeper;
 
 Game::Game(int argc, char *argv[])
 {
     this->_board = new Board();
+
+    this->_enableGUI = true;
+    this->_gui = new GUI();
 
     if ( argc > 1 )
     {
@@ -18,7 +21,6 @@ Game::Game(int argc, char *argv[])
         }
         else if ( command == "GUI" )
         {
-            this->_enableGUI = true;
         }
     }
 }
@@ -28,6 +30,12 @@ Game::~Game()
     delete this->_board;
     if ( this->_enableConsole )
         delete this->_console;
+}
+
+void Game::initialize()
+{
+    if ( this->_enableGUI )
+        this->_gui->Run();
 }
 
 void Game::update()

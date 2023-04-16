@@ -1,6 +1,6 @@
 #include "core/Board.hpp"
 
-using namespace ms;
+using namespace minesweeper;
 
 const std::vector<Pos> Board::_AROUND = {
     {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};

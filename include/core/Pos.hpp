@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace ms
+namespace minesweeper
 {
 
     class Pos

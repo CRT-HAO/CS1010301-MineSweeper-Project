@@ -2,7 +2,7 @@
 
 #include <string>
 
-using namespace ms;
+using namespace minesweeper;
 
 Console::Console(Board *board) : _board(board) {}
 

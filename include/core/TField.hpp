@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ms
+namespace minesweeper
 {
 
     enum class TField
