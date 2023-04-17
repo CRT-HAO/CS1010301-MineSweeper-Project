@@ -14,21 +14,20 @@ table {
     border-collapse: collapse;
 }
 
-td {
+div.block {
     /* border: 1px solid darkgray; */
     margin: 4px;
     width: 30px;
     height: 30px;
     text-align: center;
-    display: inline-block !important;
 }
 
-td > div.cover {
+div.block > div.cover {
     position: relative;
     display: inline;
 }
 
-td > div.cover::after {
+div.block > div.cover {
     position: absolute;
     background-color: white;
     width: 34px;
@@ -38,10 +37,10 @@ td > div.cover::after {
     content: " ";
     display: block;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
 }
 
-td > div.cover:hover::after {
+div.block > div.cover:active {
     /* border: 1px solid black; */
     background-color: rgb(240, 239, 239);
     box-shadow: none;

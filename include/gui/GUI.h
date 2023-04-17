@@ -1,4 +1,5 @@
 #pragma once
+
 #include <AppCore/AppCore.h>
 
 using namespace ultralight;

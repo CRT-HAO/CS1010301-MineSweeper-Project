@@ -5,10 +5,14 @@
 
 GUI::GUI()
 {
+    Settings settings;
+
+    settings.force_cpu_renderer = true;
+
     ///
     /// Create our main App instance.
     ///
-    app_ = App::Create();
+    app_ = App::Create(settings);
 
     ///
     /// Create a resizable window by passing by OR'ing our window flags with
