@@ -46,6 +46,18 @@ div.block > div.cover:active {
     box-shadow: none;
 }
 
+.load_settings {
+    display: inline-block;
+}
+
+.load_button {
+    display: inline-block;
+}
+
+input.input_short {
+    width: 60px;
+}
+
 /* td:hover {
     background-color: gray;
 } */

@@ -2,6 +2,7 @@
 
 #include "Field.hpp"
 #include "Pos.hpp"
+#include "TGameState.hpp"
 
 #include <iostream>
 #include <vector>
@@ -17,6 +18,7 @@ namespace minesweeper
         Board_t _board;
         size_t _width;
         size_t _height;
+        TGameState _state{TGameState::Standby};
 
     public:
         Board() : _width(0), _height(0){};

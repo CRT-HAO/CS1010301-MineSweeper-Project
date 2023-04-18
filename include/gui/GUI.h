@@ -1,6 +1,7 @@
 #pragma once
 
 #include <AppCore/AppCore.h>
+#include <JavaScriptCore/JavaScript.h>
 
 using namespace ultralight;
 
@@ -49,4 +50,9 @@ protected:
     RefPtr<App> app_;
     RefPtr<Window> window_;
     RefPtr<Overlay> overlay_;
+
+private:
+    static JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
+                                 JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[],
+                                 JSValueRef *exception);
 };

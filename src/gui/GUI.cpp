@@ -110,11 +110,34 @@ void GUI::OnDOMReady(ultralight::View *caller,
                      bool is_main_frame,
                      const String &url)
 {
-    ///
-    /// This is called when a frame's DOM has finished loading on the page.
-    ///
-    /// This is the best time to setup any JavaScript bindings.
-    ///
+    // Acquire the JS execution context for the current page.
+    //
+    // This call will lock the execution context for the current
+    // thread as long as the Ref<> is alive.
+    //
+    RefPtr<JSContext> context = caller->LockJSContext();
+
+    // Get the underlying JSContextRef for use with the
+    // JavaScriptCore C API.
+    JSContextRef ctx = context->ctx();
+
+    // Create a JavaScript String containing the name of our callback.
+    JSStringRef name = JSStringCreateWithUTF8CString("GetMessage");
+
+    // Create a garbage-collected JavaScript function that is bound to our
+    // native C callback 'GetMessage()'.
+    JSObjectRef func = JSObjectMakeFunctionWithCallback(ctx, name,
+                                                        GUI::GetMessage);
+
+    // Get the global JavaScript object (aka 'window')
+    JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
+
+    // Store our function in the page's global JavaScript object so that it
+    // accessible from the page as 'OnButtonClick()'.
+    JSObjectSetProperty(ctx, globalObj, name, func, 0, 0);
+
+    // Release the JavaScript String we created earlier.
+    JSStringRelease(name);
 }
 
 void GUI::OnChangeCursor(ultralight::View *caller,
@@ -137,4 +160,39 @@ void GUI::OnChangeTitle(ultralight::View *caller,
     /// We update the main window's title here.
     ///
     window_->SetTitle(title.utf8().data());
+}
+
+JSValueRef GUI::GetMessage(JSContextRef ctx, JSObjectRef function,
+                           JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[],
+                           JSValueRef *exception)
+{
+
+    ///
+    /// Create a JavaScript String from a C-string, initialize it with our
+    /// welcome message.
+    ///
+    JSStringRef str = JSStringCreateWithUTF8CString("Hello from C!");
+
+    ///
+    /// Create a garbage-collected JSValue using the String we just created.
+    ///
+    ///  **Note**:
+    ///    Both JSValueRef and JSObjectRef types are garbage-collected types. (And actually,
+    ///    JSObjectRef is just a typedef of JSValueRef, they share definitions).
+    ///
+    ///    The garbage collector in JavaScriptCore periodically scans the entire stack to check if
+    ///    there are any active JSValueRefs, and marks those with no references for destruction.
+    ///
+    ///    If you happen to store a JSValueRef/JSObjectRef in heap memory or in memory unreachable
+    ///    by the stack-based garbage-collector, you should explicitly call JSValueProtect() and
+    ///    JSValueUnprotect() on the reference to ensure it is kept alive.
+    ///
+    JSValueRef value = JSValueMakeString(ctx, str);
+
+    ///
+    /// Release the string we created earlier (we only Release what we Create).
+    ///
+    JSStringRelease(str);
+
+    return value;
 }

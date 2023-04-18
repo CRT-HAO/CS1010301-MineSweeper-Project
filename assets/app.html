@@ -2,9 +2,41 @@
   <head>
     <title>MineSweeper</title>
     <link rel=stylesheet type="text/css" href="./css/style.css">
+    <script src="./js/jquery-3.6.4.min.js"></script>
+    <script src="./js/script.js"></script>
   </head>
   <body>
-    <h1>MineSweeper</h1>
+    <div>
+        <span>盤面模式</span>
+        <select id="load_mode">
+            <option value="file">加載盤面檔</option>
+            <option value="random_count">隨機數量炸彈</option>
+            <option value="random_rate">隨機概率炸彈</option>
+        </select>
+    </div>
+    <div id="load_settings" class="load_settings">
+        <div id="file" style="display:none;">
+            <span>盤面檔案</span>
+            <input type="text" name="filename" value="board.txt">
+        </div>
+        <div id="random_count" style="display:none;">
+            <span>高度</span>
+            <input type="number" name="width" class="input_short" value="10">
+            <span>寬度</span>
+            <input type="number" name="height" class="input_short" value="10">
+            <span>炸彈數量</span>
+            <input type="number" name="mines_count" class="input_short" value="10">
+        </div>
+        <div id="random_rate" style="display:none;">
+            <span>高度</span>
+            <input type="number" name="width" class="input_short" value="10">
+            <span>寬度</span>
+            <input type="number" name="height" class="input_short" value="10">
+            <span>炸彈概率</span>
+            <input type="number" name="mines_rate" class="input_short" value="0.3">
+        </div>
+    </div>
+    <button id="load" class=""load_button>產生盤面</button>
     <table>
         <tbody>
           <tr>
