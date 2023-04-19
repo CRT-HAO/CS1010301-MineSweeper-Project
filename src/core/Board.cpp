@@ -83,6 +83,21 @@ bool Board::uncover(const Pos &pos)
     return true;
 }
 
+bool Board::action(const Pos &pos, bool right_click)
+{
+    if ( right_click )
+    {
+    }
+    else
+    {
+        if ( (*this)(pos).isFlag() )
+            return false;
+        if ( (*this)(pos).isMine() )
+            this->_state = TGameState::GameOver;
+        return Board::uncover(pos);
+    }
+}
+
 const TGameState &Board::updateGameState()
 {
     if ( this->_state != TGameState::Playing )
