@@ -25,7 +25,7 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
 
     if ( command == "Load" )
     {
-        string inputCommand;
+        std::string inputCommand;
         ss >> inputCommand;
         if( inputCommand == "BoardFile" )
         {
@@ -35,14 +35,14 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
         }
         else if ( inputCommand == "RandomCount")
         {
-            int count = 0;
+            std::int count = 0;
             ss >> count;
             this->_board->setRandomCount(count);
             return true;
         }
         else if ( inputCommand == "RandomRate")
         {
-            int rate;
+            std::int rate;
             ss >> rate;
             this->_board->setRandomRate(rate);
             return true;
