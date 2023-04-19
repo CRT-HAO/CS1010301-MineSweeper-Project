@@ -41,16 +41,15 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     {
         Pos pos;
         ss >> pos.x >> pos.y;
-        this->_board->action(this->pos, false);
+        this->_board->action(pos, false);
         return true;
     }
     else if ( command == "RightClick" )
     {
         Pos pos;
         ss >> pos.x >> pos.y;
-        this->_board->action(this->pos, true);
+        this->_board->action(pos, true);
         return true;
-
     }
     else if ( command == "Replay" )
     {
