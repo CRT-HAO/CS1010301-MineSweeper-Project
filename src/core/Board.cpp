@@ -17,6 +17,7 @@ void Board::clear()
     this->_width = 0;
     this->_height = 0;
     this->_board.clear();
+    this->_state = TGameState::Standby;
 }
 
 void Board::start()
@@ -80,4 +81,24 @@ bool Board::uncover(const Pos &pos)
     }
 
     return true;
+}
+
+const TGameState &Board::updateGameState()
+{
+    if ( this->_state != TGameState::Playing )
+        return this->_state;
+
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( !((*this)(pos).isMine() && (*this)(pos).isFlag()) )
+                return this->_state;
+        }
+    }
+
+    this->_win = TWin::Won;
+    this->_state == TGameState::GameOver;
+    return this->_state;
 }

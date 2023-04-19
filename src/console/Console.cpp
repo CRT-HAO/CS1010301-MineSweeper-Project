@@ -11,14 +11,17 @@ Console::Console(Board *board, int argc, char *argv[]) : _board(board) {}
 
 void Console::update()
 {
-    std::string command, result;
-    getline(std::cin, command);
-    bool success = this->proccessCommand(command, result);
+    std::string command_line, result;
+    getline(std::cin, command_line);
+    bool success = this->proccessCommand(command_line, result);
 }
 
-bool Console::proccessCommand(const std::string &command, std::string &result)
+bool Console::proccessCommand(const std::string &command_line, std::string &result)
 {
-    std::stringstream ss;
+    std::stringstream ss(command_line);
+
+    std::string command;
+    ss >> command;
 
     if ( command == "clear" )
     {
@@ -53,7 +56,7 @@ bool Console::proccessCommand(const std::string &command, std::string &result)
     }
     else
     {
-        result = "Unknown command " + command;
+        result = "Unknown command " + command_line;
         return false;
     }
 }
