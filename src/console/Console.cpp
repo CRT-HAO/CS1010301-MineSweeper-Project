@@ -11,16 +11,25 @@ Console::Console(Board *board, int argc, char *argv[]) : _board(board) {}
 
 void Console::update()
 {
-    std::string command, result;
-    getline(std::cin, command);
-    bool success = this->proccessCommand(command, result);
+    std::string command_line, result;
+    getline(std::cin, command_line);
+    bool success = this->proccessCommand(command_line, result);
 }
 
+<<<<<<< HEAD
 bool consoleCommand(const std::string &command, std::string &result)
 {
     std::stringstream ss;
     if( command == "Load")
     {
+=======
+bool Console::proccessCommand(const std::string &command_line, std::string &result)
+{
+    std::stringstream ss(command_line);
+
+    std::string command;
+    ss >> command;
+>>>>>>> 9d47ac8e5f41dc180bee5bf6888133d6f448d9b2
 
     }
     else if ( command == "StartGame" )
@@ -41,6 +50,7 @@ bool consoleCommand(const std::string &command, std::string &result)
     }
     else if ( command == "Replay")
     {
+<<<<<<< HEAD
 
     }
     else if ( command == Quit )
@@ -48,6 +58,9 @@ bool consoleCommand(const std::string &command, std::string &result)
 
     }
     result = "Unknown command " + command;
+=======
+        result = "Unknown command " + command_line;
+>>>>>>> 9d47ac8e5f41dc180bee5bf6888133d6f448d9b2
         return false;
 }
 
