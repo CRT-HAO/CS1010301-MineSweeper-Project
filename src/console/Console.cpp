@@ -35,16 +35,16 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
         }
         else if ( inputCommand == "RandomCount")
         {
-            std::int count = 0;
+            int count = 0;
             ss >> count;
-            this->_board->setRandomCount(count);
+            this->_board->randomMinesCount(count);
             return true;
         }
         else if ( inputCommand == "RandomRate")
         {
-            std::int rate;
+            int rate;
             ss >> rate;
-            this->_board->setRandomRate(rate);
+            this->_board->randomMinesRate(rate);
             return true;
         }
         else
