@@ -32,12 +32,15 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     }
     else if ( command == "Print" )
     {
+        this-> board->print();
     }
     else if ( command == "LeftClick" )
     {
+        this->_board->action(this->pos, false);
     }
     else if ( command == "RightClick" )
     {
+        this->_board->action(this->pos, false);
     }
     else if ( command == "Replay" )
     {
