@@ -26,6 +26,12 @@ void Board::start()
     this->_state = TGameState::Playing;
 }
 
+void Board::start()
+{
+    this->calcMines();
+    this->_state = TGameState::Playing;
+}
+
 bool Board::putMine(const Pos &pos)
 {
     if ( !this->inside(pos) )
@@ -80,6 +86,38 @@ bool Board::uncover(const Pos &pos)
             this->uncover(p);
     }
 
+    return true;
+}
+
+bool Board::randomMinesCount(int count)
+{
+    /// Rand a position of mines on the board.
+
+    int num_mines = count;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis_x(0, this->_width);
+    std::uniform_int_distribution<> dis_y(0, this->_height);
+    std::set<Pos> points;
+    while ( points.size() < num_mines )
+    {
+        Pos p = {dis_x(gen), dis_y(gen)};
+        points.insert(p);
+    }
+
+    for ( const auto &i : points )
+    {
+        this->putMine(i);
+    }
+
+    return true;
+}
+
+bool Board::randomMinesRate(double rate)
+{
+    int gameArea = this->_width * this->_height;
+    int minesCount = int(gameArea * rate);
+    Board::randomMinesCount(minesCount);
     return true;
 }
 
