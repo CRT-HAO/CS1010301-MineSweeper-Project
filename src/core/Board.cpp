@@ -127,6 +127,14 @@ bool Board::randomMinesCount(int count)
     return true;
 }
 
+bool Board::randomMinesRate(double rate)
+{
+    int gameArea = this->_width * this->_height;
+    int minesCount = int(gameArea * rate);
+    Board::randomMinesCount(minesCount);
+    return true;
+}
+
 bool Board::coverAll()
 {
     Pos pos;
