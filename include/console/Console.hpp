@@ -17,7 +17,8 @@ namespace minesweeper
         Console(Board *board, int argc, char *argv[]);
 
         void update();
-        bool proccessCommand(const std::string &command, std::string &result);
+        //bool proccessCommand(const std::string &command, std::string &result);
+        bool consoleCommand(const std::string &command, std::string &result);
     };
 
 }

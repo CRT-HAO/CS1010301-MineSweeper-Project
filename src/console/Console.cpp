@@ -16,44 +16,80 @@ void Console::update()
     bool success = this->proccessCommand(command, result);
 }
 
-bool Console::proccessCommand(const std::string &command, std::string &result)
+bool consoleCommand(const std::string &command, std::string &result)
 {
     std::stringstream ss;
+    if( command == "Load")
+    {
 
-    if ( command == "clear" )
-    {
-        this->_board->clear();
-        return true;
     }
-    else if ( command == "setSize" )
+    else if ( command == "StartGame" )
     {
-        size_t width, height;
-        ss >> width >> height;
-        this->_board->setSize(width, height);
-        return true;
+
     }
-    else if ( command == "putMine" )
+    else if ( command == "Print" )
     {
-        int x, y;
-        ss >> x >> y;
-        this->_board->putMine(Pos(x, y));
-        return true;
+        
     }
-    else if ( command == "calcMines" )
+    else if ( command == "LeftClick" )
     {
-        this->_board->calcMines();
-        return true;
+        
     }
-    else if ( command == "uncover" )
+    else if ( command == "RightClick")
     {
-        Pos pos;
-        ss >> pos.x >> pos.y;
-        this->_board->uncover(pos);
-        return true;
+        
     }
-    else
+    else if ( command == "Replay")
     {
-        result = "Unknown command " + command;
+
+    }
+    else if ( command == Quit )
+    {
+
+    }
+    result = "Unknown command " + command;
         return false;
-    }
 }
+
+
+// bool Console::proccessCommand(const std::string &command, std::string &result)
+// {
+//     std::stringstream ss;
+
+//     if ( command == "clear" )
+//     {
+//         this->_board->clear();
+//         return true;
+//     }
+//     else if ( command == "setSize" )
+//     {
+//         size_t width, height;
+//         ss >> width >> height;
+//         this->_board->setSize(width, height);
+//         return true;
+//     }
+//     else if ( command == "putMine" )
+//     {
+//         int x, y;
+//         ss >> x >> y;
+//         this->_board->putMine(Pos(x, y));
+//         return true;
+//     }
+//     else if ( command == "calcMines" )
+//     {
+//         this->_board->calcMines();
+//         return true;
+//     }
+//     else if ( command == "uncover" )
+//     {
+//         Pos pos;
+//         ss >> pos.x >> pos.y;
+//         this->_board->uncover(pos);
+//         return true;
+//     }
+//     else
+//     {
+//         result = "Unknown command " + command;
+//         return false;
+//     }
+// }
