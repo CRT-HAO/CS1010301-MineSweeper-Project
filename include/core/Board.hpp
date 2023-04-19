@@ -46,7 +46,7 @@ namespace minesweeper
 
         void clear();
 
-        void start();
+        bool start();
 
         bool randomMinesCount(int count);
 

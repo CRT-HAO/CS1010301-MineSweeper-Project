@@ -24,18 +24,20 @@ void Board::clear()
     this->_win = TWin::None;
 }
 
-void Board::start()
+bool Board::start()
 {
+    if ( this->_width <= 0 || this->_height <= 0 )
+        return false;
+
+    if ( this->_state != TGameState::Standby )
+        return false;
+
     this->coverAll();
     this->calcMines();
     this->_state = TGameState::Playing;
     this->_win = TWin::None;
-}
 
-void Board::start()
-{
-    this->calcMines();
-    this->_state = TGameState::Playing;
+    return true;
 }
 
 bool Board::putMine(const Pos &pos)
@@ -103,6 +105,36 @@ bool Board::uncover(const Pos &pos)
     return true;
 }
 
+bool Board::uncoverAll()
+{
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            (*this)(pos).setCovered(false);
+        }
+    }
+
+    return true;
+}
+
+bool Board::coverAll()
+{
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            (*this)(pos).setCovered(true);
+            (*this)(pos).setFlag(false);
+            (*this)(pos).setQuestionMark(false);
+        }
+    }
+
+    return true;
+}
+
 bool Board::randomMinesCount(int count)
 {
     /// Rand a position of mines on the board.
@@ -132,22 +164,6 @@ bool Board::randomMinesRate(double rate)
     int gameArea = this->_width * this->_height;
     int minesCount = int(gameArea * rate);
     Board::randomMinesCount(minesCount);
-    return true;
-}
-
-bool Board::coverAll()
-{
-    Pos pos;
-    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
-    {
-        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
-        {
-            (*this)(pos).setCovered(true);
-            (*this)(pos).setFlag(false);
-            (*this)(pos).setQuestionMark(false);
-        }
-    }
-
     return true;
 }
 
