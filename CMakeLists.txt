@@ -15,7 +15,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories(${INCLUDE_DIR})
 
+add_library(BoardFile STATIC ${SRC_DIR}/core/BoardFile.cpp)
+
 add_library(Board STATIC ${SRC_DIR}/core/Board.cpp)
+target_link_libraries(Board PRIVATE BoardFile)
 
 add_library(Console STATIC ${SRC_DIR}/console/Console.cpp)
 

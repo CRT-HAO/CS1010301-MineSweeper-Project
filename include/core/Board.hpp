@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoardFile.hpp"
 #include "Field.hpp"
 #include "Pos.hpp"
 #include "TGameState.hpp"
@@ -38,6 +39,23 @@ namespace minesweeper
                    (pos.x < this->_width && pos.y < this->_height);
         }
 
+        inline const TGameState &getState() const { return this->_state; }
+
+        inline std::string getStateInString() const
+        {
+            switch ( this->_state )
+            {
+            case TGameState::Standby:
+                return "Standby";
+            case TGameState::Playing:
+                return "Playing";
+            case TGameState::GameOver:
+                return "GameOver";
+            default:
+                return "Unknown state";
+            }
+        }
+
         void setSize(size_t width, size_t height);
 
         bool putMine(const Pos &pos);
@@ -47,6 +65,8 @@ namespace minesweeper
         void clear();
 
         bool start();
+
+        bool loadBoardFile(const BoardFile &file);
 
         bool randomMinesCount(int count);
 
@@ -60,7 +80,9 @@ namespace minesweeper
 
         bool action(const Pos &pos, bool right_click);
 
-        const TGameState &updateGameState();
+        std::string getBoardInString() const;
+
+        std::string getBoardWithoutCoverInString() const;
 
         inline const Field &operator()(const Pos &pos) const
         {
@@ -72,6 +94,8 @@ namespace minesweeper
         {
             return this->_board[pos.y][pos.x];
         }
+
+        const TGameState &updateGameState();
 
         static const std::vector<Pos> _AROUND;
     };

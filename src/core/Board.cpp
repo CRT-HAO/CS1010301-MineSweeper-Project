@@ -40,6 +40,24 @@ bool Board::start()
     return true;
 }
 
+bool Board::loadBoardFile(const BoardFile &file)
+{
+    if ( this->_state != TGameState::Standby )
+        return false;
+
+    if ( !file.isParsed() )
+        return false;
+
+    this->clear();
+
+    this->setSize(file.getBoardWidth(), file.getBoardHeight());
+
+    for ( const Pos &p : file.getBoardMinesPos() )
+        this->putMine(p);
+
+    return true;
+}
+
 bool Board::putMine(const Pos &pos)
 {
     if ( !this->inside(pos) )
@@ -92,17 +110,21 @@ bool Board::uncover(const Pos &pos)
 
     (*this)(pos).setCovered(false);
 
-    if ( (*this)(pos).val() > 0 )
-        return false;
+    if ( (*this)(pos).isMine() )
+        return true;
 
+    if ( (*this)(pos).val() > 0 )
+        return true;
+
+    bool success = false;
     for ( size_t i = 0; i < Board::_AROUND.size(); i++ )
     {
         Pos p = (Pos)pos + (Pos)Board::_AROUND[i];
         if ( this->inside(p) )
-            this->uncover(p);
+            success |= this->uncover(p);
     }
 
-    return true;
+    return success;
 }
 
 bool Board::uncoverAll()
@@ -139,21 +161,16 @@ bool Board::randomMinesCount(int count)
 {
     /// Rand a position of mines on the board.
 
-    int num_mines = count;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis_x(0, this->_width);
     std::uniform_int_distribution<> dis_y(0, this->_height);
-    std::set<Pos> points;
-    while ( points.size() < num_mines )
+    int mines_count = 0;
+    while ( mines_count < count )
     {
         Pos p = {dis_x(gen), dis_y(gen)};
-        points.insert(p);
-    }
-
-    for ( const auto &i : points )
-    {
-        this->putMine(i);
+        if ( this->putMine(p) )
+            mines_count++;
     }
 
     return true;
@@ -169,30 +186,59 @@ bool Board::randomMinesRate(double rate)
 
 bool Board::action(const Pos &pos, bool right_click)
 {
+    if ( this->_state != TGameState::Playing )
+        return false;
+
+    bool success = false;
     if ( right_click )
     {
         if ( !(*this)(pos).isCovered() )
+        {
+            this->updateGameState();
             return false;
+        }
 
         if ( !(*this)(pos).isFlag() && !(*this)(pos).isQuestionMark() )
-            (*this)(pos).setFlag(true);
+        {
+            (*this)(pos).putFlag();
+            this->updateGameState();
+            return true;
+        }
 
         if ( (*this)(pos).isFlag() )
-            return false;
+        {
+            (*this)(pos).putQuestionMark();
+            this->updateGameState();
+            return true;
+        }
+
+        if ( (*this)(pos).isQuestionMark() )
+        {
+            (*this)(pos).removeFlags();
+            this->updateGameState();
+            return true;
+        }
     }
     else
     {
-        if ( (*this)(pos).isFlag() )
+        if ( (*this)(pos).isFlag() || (*this)(pos).isQuestionMark() )
+        {
+            this->updateGameState();
             return false;
+        }
 
         if ( (*this)(pos).isMine() )
         {
+            this->uncoverAll();
             this->_state = TGameState::GameOver;
             this->_win = TWin::Loose;
+            return true;
         }
 
-        return Board::uncover(pos);
+        return this->uncover(pos);
     }
+
+    return success;
 }
 
 const TGameState &Board::updateGameState()
@@ -216,6 +262,46 @@ const TGameState &Board::updateGameState()
     }
 
     this->_win = TWin::Won;
-    this->_state == TGameState::GameOver;
+    this->_state = TGameState::GameOver;
     return this->_state;
+}
+
+std::string Board::getBoardInString() const
+{
+    std::string board;
+    size_t ii = 0;
+
+    for ( const auto &i : this->_board )
+    {
+        for ( const auto &j : i )
+        {
+            board += j.getChar();
+            board += " ";
+        }
+        if ( ii < this->_board.size() - 1 )
+            board += "\n";
+        ii += 1;
+    }
+
+    return board;
+}
+
+std::string Board::getBoardWithoutCoverInString() const
+{
+    std::string board;
+    size_t ii = 0;
+
+    for ( const auto &i : this->_board )
+    {
+        for ( const auto &j : i )
+        {
+            board += j.getFieldChar();
+            board += " ";
+        }
+        if ( ii < this->_board.size() - 1 )
+            board += "\n";
+        ii += 1;
+    }
+
+    return board;
 }

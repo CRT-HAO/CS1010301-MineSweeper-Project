@@ -1,5 +1,8 @@
 #include "console/Console.hpp"
 
+#include "core/BoardFile.hpp"
+
+#include <fstream>
 #include <sstream>
 #include <string>
 
@@ -7,16 +10,49 @@ using namespace minesweeper;
 
 Console::Console(Board *board) : _board(board) {}
 
-Console::Console(Board *board, int argc, char *argv[]) : _board(board) {}
+Console::Console(Board *board, const std::string &inputFile,
+                 const std::string &outputFile)
+    : _board(board), _fileMode(true)
+{
+    this->_ifs.open(inputFile, std::ifstream::in);
+    if ( !this->_ifs.is_open() )
+    {
+        std::cout << "Open input command file error!" << std::endl;
+        this->_running = false;
+    }
+
+    this->_ofs.open(outputFile);
+    if ( !this->_ofs.is_open() )
+    {
+        std::cout << "Open output file error!" << std::endl;
+        this->_running = false;
+    }
+}
 
 void Console::update()
 {
+    if ( !this->_running )
+        return;
+
     std::string command_line, result;
-    getline(std::cin, command_line);
-    bool success = this->proccessCommand(command_line, result);
+    if ( this->_fileMode )
+    {
+        this->_running = bool(getline(this->_ifs, command_line, '\r'));
+        if ( !this->_running )
+            return;
+        bool success = this->proccessCommand(command_line, result);
+        this->_ofs << "<" << command_line << "> : " << result << std::endl;
+    }
+    else
+    {
+        getline(std::cin, command_line);
+        bool success = this->proccessCommand(command_line, result);
+        std::cout << "<" << command_line << "> : " << result << std::endl;
+    }
 }
 
-bool Console::proccessCommand(const std::string &command_line, std::string &result)
+bool Console::proccessCommand(const std::string &command_line,
+                              std::string &result)
 {
     std::stringstream ss(command_line);
 
@@ -29,23 +65,46 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
         ss >> loadMode;
         if ( loadMode == "BoardFile" )
         {
+            if ( this->_board->getState() != TGameState::Standby )
+            {
+                result = "Failed";
+                return false;
+            }
             std::string inputFileName;
             ss >> inputFileName;
-            return true;
+            BoardFile file(inputFileName);
+            bool success = this->_board->loadBoardFile(file);
+            result = success ? "Success" : "Failed";
+            return success;
         }
         else if ( loadMode == "RandomCount" )
         {
-            int count = 0;
-            ss >> count;
-            this->_board->randomMinesCount(count);
-            return true;
+            if ( this->_board->getState() != TGameState::Standby )
+            {
+                result = "Failed";
+                return false;
+            }
+            int width, height, count;
+            ss >> height >> width >> count;
+            this->_board->setSize(width, height);
+            bool success = this->_board->randomMinesCount(count);
+            result = success ? "Success" : "Failed";
+            return success;
         }
         else if ( loadMode == "RandomRate" )
         {
+            if ( this->_board->getState() != TGameState::Standby )
+            {
+                result = "Failed";
+                return false;
+            }
+            int width, height;
             double rate;
-            ss >> rate;
-            this->_board->randomMinesRate(rate);
-            return true;
+            ss >> height >> width >> rate;
+            this->_board->setSize(width, height);
+            bool success = this->_board->randomMinesRate(rate);
+            result = success ? "Success" : "Failed";
+            return success;
         }
         else
         {
@@ -56,31 +115,86 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     }
     else if ( command == "StartGame" )
     {
-        this->_board->start();
-        return true;
+        if ( this->_board->getState() != TGameState::Standby )
+        {
+            result = "Failed";
+            return false;
+        }
+        bool success = this->_board->start();
+        result = success ? "Success" : "Failed";
+        return success;
     }
     else if ( command == "Print" )
     {
-        this->_board->print();
-        return true;
+        std::string printMode;
+        ss >> printMode;
+        if ( printMode == "GameBoard" )
+        {
+            result = '\n' + this->_board->getBoardInString();
+            return true;
+        }
+        else if ( printMode == "GameAnswer" )
+        {
+            result = '\n' + this->_board->getBoardWithoutCoverInString();
+            return true;
+        }
+        else if ( printMode == "GameState" )
+        {
+            result = this->_board->getStateInString();
+            return true;
+        }
+        else
+        {
+            result = "Failed";
+            return false;
+        }
     }
     else if ( command == "LeftClick" )
     {
+        if ( this->_board->getState() != TGameState::Playing )
+        {
+            result = "Failed";
+            return false;
+        }
         Pos pos;
         ss >> pos.x >> pos.y;
-        this->_board->action(pos, false);
-        return true;
+        bool success = this->_board->action(pos, false);
+        result = success ? "Success" : "Failed";
+        return success;
     }
     else if ( command == "RightClick" )
     {
+        if ( this->_board->getState() != TGameState::Playing )
+        {
+            result = "Failed";
+            return false;
+        }
         Pos pos;
         ss >> pos.x >> pos.y;
-        this->_board->action(pos, true);
-        return true;
+        bool success = this->_board->action(pos, true);
+        result = success ? "Success" : "Failed";
+        return success;
     }
     else if ( command == "Replay" )
     {
-        this->_board->start();
+        if ( this->_board->getState() != TGameState::GameOver )
+        {
+            result = "Failed";
+            return false;
+        }
+        this->_board->clear();
+        result = "Success";
+        return true;
+    }
+    else if ( command == "Quit" )
+    {
+        if ( this->_board->getState() != TGameState::GameOver )
+        {
+            result = "Failed";
+            return false;
+        }
+        this->_running = false;
+        result = "Success";
         return true;
     }
     else

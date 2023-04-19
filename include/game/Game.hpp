@@ -20,6 +20,8 @@ namespace minesweeper
         Game(int argc, char *argv[]);
         ~Game();
 
+        bool isRunning() const;
+
         void initialize();
         void update();
     };

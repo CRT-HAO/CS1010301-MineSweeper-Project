@@ -52,21 +52,34 @@ namespace minesweeper
             if ( this->_flag )
                 return 'F';
 
+            if ( this->_question_mark )
+                return '?';
+
             if ( this->_covered )
                 return '#';
 
             switch ( this->_field )
             {
             case TField::None:
-                if ( this->_val > 0 )
-                    return this->_val + '0';
-                else
-                    return ' ';
+                return this->_val + '0';
             case TField::Mine:
-                return '*';
+                return 'X';
             }
 
-            return '?';
+            return ' ';
+        }
+
+        char getFieldChar() const
+        {
+            switch ( this->_field )
+            {
+            case TField::None:
+                return this->_val + '0';
+            case TField::Mine:
+                return 'X';
+            }
+
+            return ' ';
         }
     };
 
