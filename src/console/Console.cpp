@@ -25,6 +25,33 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
 
     if ( command == "Load" )
     {
+        string inputCommand;
+        cc >> inputCommand;
+        if( inputCommand == "BoardFile" )
+        {
+            string inputFileName;
+            ss >> inputFileName;
+            return true;
+        }
+        else if ( inputCommand == "RandomCount")
+        {
+            int count = 0;
+            ss >> count;
+            this->_board->setRandomCount(count);
+            return true;
+        }
+        else if ( inputCommand == "RandomRate")
+        {
+            int rate;
+            ss >> rate;
+            this->_board->setRandomRate(rate);
+            return true;
+        }
+        else
+        {
+            result = "Failed" + command_line;
+            return false;
+        }
         return true;
     }
     else if ( command == "StartGame" )
@@ -53,7 +80,12 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     }
     else if ( command == "Replay" )
     {
-        result = "Unknown command " + command_line;
+        this->board->start();
+        return true;
+    }
+    else
+    {
+        result = "Failed" + command_line;
         return false;
     }
 
