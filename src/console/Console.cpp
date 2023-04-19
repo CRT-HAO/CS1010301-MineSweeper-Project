@@ -25,22 +25,32 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
 
     if ( command == "Load" )
     {
+        return true;
     }
     else if ( command == "StartGame" )
     {
         this->_board->start();
+        return true;
     }
     else if ( command == "Print" )
     {
-        this-> board->print();
+        this->_board->print();
+        return true;
     }
     else if ( command == "LeftClick" )
     {
+        Pos pos;
+        ss >> pos.x >> pos.y;
         this->_board->action(this->pos, false);
+        return true;
     }
     else if ( command == "RightClick" )
     {
-        this->_board->action(this->pos, false);
+        Pos pos;
+        ss >> pos.x >> pos.y;
+        this->_board->action(this->pos, true);
+        return true;
+
     }
     else if ( command == "Replay" )
     {
