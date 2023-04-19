@@ -26,7 +26,7 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     if ( command == "Load" )
     {
         string inputCommand;
-        cc >> inputCommand;
+        ss >> inputCommand;
         if( inputCommand == "BoardFile" )
         {
             string inputFileName;
