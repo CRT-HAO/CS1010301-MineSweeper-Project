@@ -1,5 +1,8 @@
 #include "core/Board.hpp"
 
+#include <random>
+#include <set>
+
 using namespace minesweeper;
 
 const std::vector<Pos> Board::_AROUND = {
@@ -27,6 +30,12 @@ void Board::start()
     this->calcMines();
     this->_state = TGameState::Playing;
     this->_win = TWin::None;
+}
+
+void Board::start()
+{
+    this->calcMines();
+    this->_state = TGameState::Playing;
 }
 
 bool Board::putMine(const Pos &pos)
@@ -94,15 +103,25 @@ bool Board::uncover(const Pos &pos)
     return true;
 }
 
-bool Board::uncoverAll()
+bool Board::randomMinesCount(int count)
 {
-    Pos pos;
-    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    /// Rand a position of mines on the board.
+
+    int num_mines = count;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis_x(0, this->_width);
+    std::uniform_int_distribution<> dis_y(0, this->_height);
+    std::set<Pos> points;
+    while ( points.size() < num_mines )
     {
-        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
-        {
-            (*this)(pos).setCovered(false);
-        }
+        Pos p = {dis_x(gen), dis_y(gen)};
+        points.insert(p);
+    }
+
+    for ( const auto &i : points )
+    {
+        this->putMine(i);
     }
 
     return true;
