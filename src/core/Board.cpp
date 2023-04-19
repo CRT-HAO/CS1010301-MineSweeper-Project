@@ -17,6 +17,13 @@ void Board::clear()
     this->_width = 0;
     this->_height = 0;
     this->_board.clear();
+    this->_state = TGameState::Standby;
+}
+
+void Board::start()
+{
+    this->calcMines();
+    this->_state = TGameState::Playing;
 }
 
 void Board::start()
@@ -112,4 +119,39 @@ bool Board::randomMinesRate(double rate)
     int minesCount = int(gameArea * rate);
     Board::randomMinesCount(minesCount);
     return true;
+}
+
+bool Board::action(const Pos &pos, bool right_click)
+{
+    if ( right_click )
+    {
+    }
+    else
+    {
+        if ( (*this)(pos).isFlag() )
+            return false;
+        if ( (*this)(pos).isMine() )
+            this->_state = TGameState::GameOver;
+        return Board::uncover(pos);
+    }
+}
+
+const TGameState &Board::updateGameState()
+{
+    if ( this->_state != TGameState::Playing )
+        return this->_state;
+
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( !((*this)(pos).isMine() && (*this)(pos).isFlag()) )
+                return this->_state;
+        }
+    }
+
+    this->_win = TWin::Won;
+    this->_state == TGameState::GameOver;
+    return this->_state;
 }

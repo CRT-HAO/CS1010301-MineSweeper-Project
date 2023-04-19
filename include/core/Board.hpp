@@ -3,6 +3,7 @@
 #include "Field.hpp"
 #include "Pos.hpp"
 #include "TGameState.hpp"
+#include "TWin.hpp"
 
 #include <iostream>
 #include <vector>
@@ -18,6 +19,8 @@ namespace minesweeper
         Board_t _board;
         size_t _width;
         size_t _height;
+        size_t _mines_count{0};
+        TWin _win{TWin::None};
         TGameState _state{TGameState::Standby};
 
     public:
@@ -41,9 +44,19 @@ namespace minesweeper
 
         void calcMines();
 
-        void restart();
+        void clear();
+
+        void start();
+
+        bool randomMinesCount(int count);
+
+        bool randomMinesRate(double rate);
 
         bool uncover(const Pos &pos);
+
+        bool action(const Pos &pos, bool right_click);
+
+        const TGameState &updateGameState();
 
         inline const Field &operator()(const Pos &pos) const
         {
