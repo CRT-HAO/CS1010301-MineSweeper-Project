@@ -18,12 +18,15 @@ void Board::clear()
     this->_height = 0;
     this->_board.clear();
     this->_state = TGameState::Standby;
+    this->_win = TWin::None;
 }
 
 void Board::start()
 {
+    this->coverAll();
     this->calcMines();
     this->_state = TGameState::Playing;
+    this->_win = TWin::None;
 }
 
 bool Board::putMine(const Pos &pos)
@@ -42,6 +45,14 @@ bool Board::putMine(const Pos &pos)
 void Board::calcMines()
 {
     Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            (*this)(pos).setVal(0);
+        }
+    }
+
     for ( pos.x = 0; pos.x < this->_width; pos.x++ )
     {
         for ( pos.y = 0; pos.y < this->_height; pos.y++ )
@@ -83,17 +94,60 @@ bool Board::uncover(const Pos &pos)
     return true;
 }
 
+bool Board::uncoverAll()
+{
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            (*this)(pos).setCovered(false);
+        }
+    }
+
+    return true;
+}
+
+bool Board::coverAll()
+{
+    Pos pos;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            (*this)(pos).setCovered(true);
+            (*this)(pos).setFlag(false);
+            (*this)(pos).setQuestionMark(false);
+        }
+    }
+
+    return true;
+}
+
 bool Board::action(const Pos &pos, bool right_click)
 {
     if ( right_click )
     {
+        if ( !(*this)(pos).isCovered() )
+            return false;
+
+        if ( !(*this)(pos).isFlag() && !(*this)(pos).isQuestionMark() )
+            (*this)(pos).setFlag(true);
+
+        if ( (*this)(pos).isFlag() )
+            return false;
     }
     else
     {
         if ( (*this)(pos).isFlag() )
             return false;
+
         if ( (*this)(pos).isMine() )
+        {
             this->_state = TGameState::GameOver;
+            this->_win = TWin::Loose;
+        }
+
         return Board::uncover(pos);
     }
 }
@@ -108,8 +162,13 @@ const TGameState &Board::updateGameState()
     {
         for ( pos.y = 0; pos.y < this->_height; pos.y++ )
         {
-            if ( !((*this)(pos).isMine() && (*this)(pos).isFlag()) )
-                return this->_state;
+            if ( (*this)(pos).isMine() && (*this)(pos).isFlag() )
+                continue;
+
+            if ( !(*this)(pos).isMine() && !(*this)(pos).isFlag() )
+                continue;
+
+            return this->_state;
         }
     }
 

@@ -15,6 +15,7 @@ namespace minesweeper
         int _val{0};
         bool _covered{true};
         bool _flag{false};
+        bool _question_mark{false};
 
     public:
         Field() {}
@@ -24,6 +25,19 @@ namespace minesweeper
         inline void setVal(int val) { this->_val = val; }
         inline void setCovered(bool covered) { this->_covered = covered; }
         inline void setFlag(bool flag) { this->_flag = flag; }
+        inline void setQuestionMark(bool question) { this->_question_mark = question; }
+        inline void removeFlags()
+        {
+            this->_flag = false, this->_question_mark = false;
+        }
+        inline void putFlag()
+        {
+            this->_flag = true, this->_question_mark = false;
+        }
+        inline void putQuestionMark()
+        {
+            this->_flag = false, this->_question_mark = true;
+        }
 
         inline TField get() const { return this->_field; }
         inline int val() const { return this->_val; }
@@ -31,6 +45,7 @@ namespace minesweeper
         inline bool isEmpty() const { return this->_field == TField::None; }
         inline bool isCovered() const { return this->_covered; }
         inline bool isFlag() const { return this->_flag; }
+        inline bool isQuestionMark() const { return this->_question_mark; }
 
         char getChar() const
         {

@@ -54,6 +54,10 @@ namespace minesweeper
 
         bool uncover(const Pos &pos);
 
+        bool uncoverAll();
+
+        bool coverAll();
+
         bool action(const Pos &pos, bool right_click);
 
         const TGameState &updateGameState();
