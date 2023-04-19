@@ -49,7 +49,7 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
         }
         else
         {
-            result = "Failed" + command_line;
+            result = "Failed";
             return false;
         }
         return true;
@@ -80,12 +80,12 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
     }
     else if ( command == "Replay" )
     {
-        this->board->start();
+        this->_board->start();
         return true;
     }
     else
     {
-        result = "Failed" + command_line;
+        result = "Failed";
         return false;
     }
 
