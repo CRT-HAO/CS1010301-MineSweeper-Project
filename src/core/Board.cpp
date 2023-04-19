@@ -12,11 +12,17 @@ void Board::setSize(size_t width, size_t height)
     this->_board.resize(height, std::vector<Field>(width));
 }
 
-void Board::restart()
+void Board::clear()
 {
     this->_width = 0;
     this->_height = 0;
     this->_board.clear();
+}
+
+void Board::start()
+{
+    this->calcMines();
+    this->_state = TGameState::Playing;
 }
 
 bool Board::putMine(const Pos &pos)

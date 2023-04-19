@@ -41,9 +41,17 @@ namespace minesweeper
 
         void calcMines();
 
-        void restart();
+        void clear();
+
+        void start();
+
+        bool randomMinesCount(int count);
+
+        bool randomMinesRate(double rate);
 
         bool uncover(const Pos &pos);
+
+        const TGameState &getGameState();
 
         inline const Field &operator()(const Pos &pos) const
         {

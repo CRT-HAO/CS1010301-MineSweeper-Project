@@ -2,6 +2,8 @@
 
 #include "core/Board.hpp"
 
+#include <iostream>
+
 namespace minesweeper
 {
 
@@ -15,6 +17,7 @@ namespace minesweeper
         Console(Board *board, int argc, char *argv[]);
 
         void update();
+        bool proccessCommand(const std::string &command, std::string &result);
     };
 
 }
