@@ -25,24 +25,24 @@ bool Console::proccessCommand(const std::string &command_line, std::string &resu
 
     if ( command == "Load" )
     {
-        std::string inputCommand;
-        ss >> inputCommand;
-        if ( inputCommand == "BoardFile" )
+        std::string loadMode;
+        ss >> loadMode;
+        if ( loadMode == "BoardFile" )
         {
-            string inputFileName;
+            std::string inputFileName;
             ss >> inputFileName;
             return true;
         }
-        else if ( inputCommand == "RandomCount" )
+        else if ( loadMode == "RandomCount" )
         {
             int count = 0;
             ss >> count;
             this->_board->randomMinesCount(count);
             return true;
         }
-        else if ( inputCommand == "RandomRate" )
+        else if ( loadMode == "RandomRate" )
         {
-            int rate;
+            double rate;
             ss >> rate;
             this->_board->randomMinesRate(rate);
             return true;
