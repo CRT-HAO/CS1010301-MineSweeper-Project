@@ -224,7 +224,7 @@ bool Board::action(const Pos &pos, bool right_click)
         if ( !this->inside(pos) )
             return false;
 
-        if ( (*this)(pos).isFlag() || (*this)(pos).isQuestionMark() )
+        if ( (*this)(pos).isFlag() )
         {
             this->updateGameState();
             return false;
