@@ -39,6 +39,8 @@ namespace minesweeper
                    (pos.x < this->_width && pos.y < this->_height);
         }
 
+        inline const TWin &getWin() const { return this->_win; }
+
         inline const TGameState &getState() const { return this->_state; }
 
         inline std::string getStateInString() const
