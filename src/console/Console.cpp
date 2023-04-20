@@ -40,14 +40,23 @@ void Console::update()
     if ( this->_fileMode )
     {
         this->_running = bool(Console::_safeGetline(this->_ifs, command_line));
+
         if ( !this->_running )
             return;
+
+        if ( command_line.length() <= 0 )
+            return;
+
         bool success = this->proccessCommand(command_line, result);
         this->_ofs << "<" << command_line << "> : " << result << std::endl;
     }
     else
     {
         getline(std::cin, command_line);
+
+        if ( command_line.length() <= 0 )
+            return;
+
         bool success = this->proccessCommand(command_line, result);
         std::cout << "<" << command_line << "> : " << result << std::endl;
     }
@@ -77,7 +86,7 @@ bool Console::proccessCommand(const std::string &command_line,
             BoardFile file(inputFileName);
             bool success = this->_board->loadBoardFile(file);
             result = success ? "Success" : "Failed";
-            return success;
+            return true;
         }
         else if ( loadMode == "RandomCount" )
         {
@@ -91,7 +100,7 @@ bool Console::proccessCommand(const std::string &command_line,
             this->_board->setSize(width, height);
             bool success = this->_board->randomMinesCount(count);
             result = success ? "Success" : "Failed";
-            return success;
+            return true;
         }
         else if ( loadMode == "RandomRate" )
         {
@@ -106,7 +115,7 @@ bool Console::proccessCommand(const std::string &command_line,
             this->_board->setSize(width, height);
             bool success = this->_board->randomMinesRate(rate);
             result = success ? "Success" : "Failed";
-            return success;
+            return true;
         }
         else
         {
@@ -124,7 +133,7 @@ bool Console::proccessCommand(const std::string &command_line,
         }
         bool success = this->_board->start();
         result = success ? "Success" : "Failed";
-        return success;
+        return true;
     }
     else if ( command == "Print" )
     {
@@ -182,7 +191,14 @@ bool Console::proccessCommand(const std::string &command_line,
         ss >> pos.y >> pos.x;
         bool success = this->_board->action(pos, false);
         result = success ? "Success" : "Failed";
-        return success;
+        if ( success && this->_board->getState() == TGameState::GameOver )
+        {
+            result += "\n";
+            result += (this->_board->getWin() == TWin::Won)
+                          ? "You win the game"
+                          : "You loose the game";
+        }
+        return true;
     }
     else if ( command == "RightClick" )
     {
@@ -195,7 +211,7 @@ bool Console::proccessCommand(const std::string &command_line,
         ss >> pos.y >> pos.x;
         bool success = this->_board->action(pos, true);
         result = success ? "Success" : "Failed";
-        return success;
+        return true;
     }
     else if ( command == "Replay" )
     {
