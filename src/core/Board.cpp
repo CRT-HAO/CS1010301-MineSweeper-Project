@@ -266,6 +266,70 @@ const TGameState &Board::updateGameState()
     return this->_state;
 }
 
+// 取得目前炸彈數量
+int Board::getMineCount()
+{
+    Pos pos;
+    int mineCount = 0;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( (*this)(pos).isMine() )
+                mineCount++;
+        }
+    }
+    return mineCount;
+}
+
+// 取得目前旗幟數量
+int Board::getFlagCount()
+{
+    Pos pos;
+    int flagCount = 0;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( (*this)(pos).isFlag() )
+                flagCount++;
+        }
+    }
+    return flagCount;
+}
+
+// 取得目前空白格子數量
+int Board::getOpenBlankCount()
+{
+    Pos pos;
+    int openBlankCount = 0;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( !(*this)(pos).isCovered() && (*this)(pos).isEmpty() )
+                openBlankCount++;
+        }
+    }
+    return openBlankCount;
+}
+
+// 取得尚未打開的空白格子數量
+int Board::getRemainBlankCount()
+{
+    Pos pos;
+    int remainBlankCount = 0;
+    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    {
+        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
+        {
+            if ( (*this)(pos).isCovered() && (*this)(pos).isEmpty() )
+                remainBlankCount++;
+        }
+    }
+    return remainBlankCount;
+}
+
 std::string Board::getBoardInString() const
 {
     std::string board;

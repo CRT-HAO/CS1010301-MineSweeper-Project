@@ -79,6 +79,18 @@ namespace minesweeper
         bool coverAll();
 
         bool action(const Pos &pos, bool right_click);
+        
+        // 取得目前炸彈數量
+        int getMineCount();
+
+        // 取得目前旗幟數量
+        int getFlagCount();
+
+        // 取得目前空白格子數量
+        int getOpenBlankCount();
+
+        // 取得尚未打開的空白格子數量
+        int getRemainBlankCount();
 
         std::string getBoardInString() const;
 
