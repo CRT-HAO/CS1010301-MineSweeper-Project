@@ -124,7 +124,7 @@ bool Board::uncover(const Pos &pos)
             success |= this->uncover(p);
     }
 
-    return success;
+    return true;
 }
 
 bool Board::uncoverAll()
@@ -238,7 +238,9 @@ bool Board::action(const Pos &pos, bool right_click)
             return true;
         }
 
-        return this->uncover(pos);
+        bool success = this->uncover(pos);
+        this->updateGameState();
+        return success;
     }
 
     return success;
@@ -249,23 +251,12 @@ const TGameState &Board::updateGameState()
     if ( this->_state != TGameState::Playing )
         return this->_state;
 
-    Pos pos;
-    for ( pos.x = 0; pos.x < this->_width; pos.x++ )
+    if ( this->getRemainBlankCount() == 0 )
     {
-        for ( pos.y = 0; pos.y < this->_height; pos.y++ )
-        {
-            if ( (*this)(pos).isMine() && (*this)(pos).isFlag() )
-                continue;
-
-            if ( !(*this)(pos).isMine() && !(*this)(pos).isFlag() )
-                continue;
-
-            return this->_state;
-        }
+        this->_win = TWin::Won;
+        this->_state = TGameState::GameOver;
     }
 
-    this->_win = TWin::Won;
-    this->_state = TGameState::GameOver;
     return this->_state;
 }
 
