@@ -19,6 +19,7 @@ Console::Console(Board *board, const std::string &inputFile,
     {
         std::cout << "Open input command file error!" << std::endl;
         this->_running = false;
+        return;
     }
 
     this->_ofs.open(outputFile);
@@ -26,6 +27,7 @@ Console::Console(Board *board, const std::string &inputFile,
     {
         std::cout << "Open output file error!" << std::endl;
         this->_running = false;
+        return;
     }
 }
 
@@ -37,7 +39,7 @@ void Console::update()
     std::string command_line, result;
     if ( this->_fileMode )
     {
-        this->_running = bool(getline(this->_ifs, command_line, '\r'));
+        this->_running = bool(Console::_safeGetline(this->_ifs, command_line));
         if ( !this->_running )
             return;
         bool success = this->proccessCommand(command_line, result);
@@ -143,6 +145,26 @@ bool Console::proccessCommand(const std::string &command_line,
             result = this->_board->getStateInString();
             return true;
         }
+        else if ( printMode == "BombCount" )
+        {
+            result = std::to_string(this->_board->getMineCount());
+            return true;
+        }
+        else if ( printMode == "FlagCount" )
+        {
+            result = std::to_string(this->_board->getFlagCount());
+            return true;
+        }
+        else if ( printMode == "OpenBlankCount" )
+        {
+            result = std::to_string(this->_board->getOpenBlankCount());
+            return true;
+        }
+        else if ( printMode == "RemainBlankCount" )
+        {
+            result = std::to_string(this->_board->getRemainBlankCount());
+            return true;
+        }
         else
         {
             result = "Failed";
@@ -239,4 +261,39 @@ bool Console::proccessCommand(const std::string &command_line,
     //         result = "Unknown command " + command;
     //         return false;
     //     }
+}
+
+std::istream &Console::_safeGetline(std::istream &is, std::string &t)
+{
+    t.clear();
+
+    // The characters in the stream are read one-by-one using a std::streambuf.
+    // That is faster than reading them one-by-one using the std::istream.
+    // Code that uses streambuf this way must be guarded by a sentry object.
+    // The sentry object performs various tasks,
+    // such as thread synchronization and updating the stream state.
+
+    std::istream::sentry se(is, true);
+    std::streambuf *sb = is.rdbuf();
+
+    for ( ;; )
+    {
+        int c = sb->sbumpc();
+        switch ( c )
+        {
+        case '\n':
+            return is;
+        case '\r':
+            if ( sb->sgetc() == '\n' )
+                sb->sbumpc();
+            return is;
+        case std::streambuf::traits_type::eof():
+            // Also handle the case when the last line has no line ending
+            if ( t.empty() )
+                is.setstate(std::ios::eofbit);
+            return is;
+        default:
+            t += (char)c;
+        }
+    }
 }

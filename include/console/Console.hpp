@@ -25,6 +25,9 @@ namespace minesweeper
 
         void update();
         bool proccessCommand(const std::string &command, std::string &result);
+
+    private:
+        static std::istream &_safeGetline(std::istream &is, std::string &t);
     };
 
 }
