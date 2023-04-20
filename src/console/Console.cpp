@@ -196,7 +196,7 @@ bool Console::proccessCommand(const std::string &command_line,
             result += "\n";
             result += (this->_board->getWin() == TWin::Won)
                           ? "You win the game"
-                          : "You loose the game";
+                          : "You lose the game";
         }
         return true;
     }
