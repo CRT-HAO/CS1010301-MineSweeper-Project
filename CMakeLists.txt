@@ -20,12 +20,14 @@ add_library(BoardFile STATIC ${SRC_DIR}/core/BoardFile.cpp)
 add_library(Board STATIC ${SRC_DIR}/core/Board.cpp)
 target_link_libraries(Board PRIVATE BoardFile)
 
+link_libraries(Board)
+
 add_library(Console STATIC ${SRC_DIR}/console/Console.cpp)
 
 add_library(GUI STATIC ${SRC_DIR}/gui/GUI.cpp)
+target_link_libraries(GUI PRIVATE BoardFile)
 
 add_library(Game STATIC ${SRC_DIR}/game/Game.cpp)
-target_link_libraries(Game PRIVATE Board)
 target_link_libraries(Game PRIVATE Console)
 target_link_libraries(Game PRIVATE GUI)
 

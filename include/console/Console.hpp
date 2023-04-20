@@ -10,15 +10,15 @@ namespace minesweeper
     class Console
     {
     private:
-        Board *_board;
+        Board _board;
         std::ifstream _ifs;
         std::ofstream _ofs;
         bool _fileMode{false};
         bool _running{true};
 
     public:
-        Console(Board *board);
-        Console(Board *board, const std::string &inputFile,
+        Console();
+        Console(const std::string &inputFile,
                 const std::string &outputFile);
 
         inline bool isRunning() const { return this->_running; }

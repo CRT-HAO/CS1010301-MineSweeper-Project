@@ -6,28 +6,26 @@ using namespace minesweeper;
 
 Game::Game(int argc, char *argv[])
 {
-    this->_board = new Board();
-
     if ( argc > 1 )
     {
         std::string command = argv[1];
         if ( command == "CommandInput" )
         {
             this->_enableConsole = true;
-            this->_console = new Console(this->_board);
+            this->_console = new Console();
         }
-        else if ( command == "CommandFile" )
+        else if ( command == "CommandFile" || command == "GUI" )
         {
             if ( argc >= 3 )
             {
                 std::string inputFilePath = argv[2];
                 std::string outputFilePath = argv[3];
                 this->_enableConsole = true;
-                this->_console = new Console(this->_board,
-                                             inputFilePath, outputFilePath);
+                this->_console = new Console(inputFilePath, outputFilePath);
             }
         }
-        else if ( command == "GUI" )
+
+        if ( command == "GUI" )
         {
             this->_enableGUI = true;
             this->_gui = new GUI();
@@ -37,9 +35,11 @@ Game::Game(int argc, char *argv[])
 
 Game::~Game()
 {
-    delete this->_board;
     if ( this->_enableConsole )
         delete this->_console;
+
+    if ( this->_enableGUI )
+        delete this->_gui;
 }
 
 bool Game::isRunning() const

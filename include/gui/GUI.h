@@ -1,8 +1,11 @@
 #pragma once
 
+#include "core/Board.hpp"
+
 #include <AppCore/AppCore.h>
 #include <JavaScriptCore/JavaScript.h>
 
+using namespace minesweeper;
 using namespace ultralight;
 
 class GUI : public AppListener,
@@ -25,7 +28,8 @@ public:
     virtual void OnClose(ultralight::Window *window) override;
 
     // This is called whenever the window resizes.
-    virtual void OnResize(ultralight::Window *window, uint32_t width, uint32_t height) override;
+    virtual void OnResize(ultralight::Window *window, uint32_t width,
+                          uint32_t height) override;
 
     // This is called when the page finishes a load in one of its frames.
     virtual void OnFinishLoading(ultralight::View *caller,
@@ -53,6 +57,12 @@ protected:
 
 private:
     static JSValueRef GetMessage(JSContextRef ctx, JSObjectRef function,
-                                 JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[],
+                                 JSObjectRef thisObject, size_t argumentCount,
+                                 const JSValueRef arguments[],
                                  JSValueRef *exception);
+
+    static JSValueRef LoadBoard(JSContextRef ctx, JSObjectRef function,
+                                JSObjectRef thisObject, size_t argumentCount,
+                                const JSValueRef arguments[],
+                                JSValueRef *exception);
 };

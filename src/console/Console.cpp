@@ -8,11 +8,10 @@
 
 using namespace minesweeper;
 
-Console::Console(Board *board) : _board(board) {}
+Console::Console() {}
 
-Console::Console(Board *board, const std::string &inputFile,
-                 const std::string &outputFile)
-    : _board(board), _fileMode(true)
+Console::Console(const std::string &inputFile, const std::string &outputFile)
+    : _fileMode(true)
 {
     this->_ifs.open(inputFile, std::ifstream::in);
     if ( !this->_ifs.is_open() )
@@ -76,7 +75,7 @@ bool Console::proccessCommand(const std::string &command_line,
         ss >> loadMode;
         if ( loadMode == "BoardFile" )
         {
-            if ( this->_board->getState() != TGameState::Standby )
+            if ( this->_board.getState() != TGameState::Standby )
             {
                 result = "Failed";
                 return false;
@@ -84,27 +83,27 @@ bool Console::proccessCommand(const std::string &command_line,
             std::string inputFileName;
             ss >> inputFileName;
             BoardFile file(inputFileName);
-            bool success = this->_board->loadBoardFile(file);
+            bool success = this->_board.loadBoardFile(file);
             result = success ? "Success" : "Failed";
             return true;
         }
         else if ( loadMode == "RandomCount" )
         {
-            if ( this->_board->getState() != TGameState::Standby )
+            if ( this->_board.getState() != TGameState::Standby )
             {
                 result = "Failed";
                 return false;
             }
             int width, height, count;
             ss >> height >> width >> count;
-            this->_board->setSize(width, height);
-            bool success = this->_board->randomMinesCount(count);
+            this->_board.setSize(width, height);
+            bool success = this->_board.randomMinesCount(count);
             result = success ? "Success" : "Failed";
             return true;
         }
         else if ( loadMode == "RandomRate" )
         {
-            if ( this->_board->getState() != TGameState::Standby )
+            if ( this->_board.getState() != TGameState::Standby )
             {
                 result = "Failed";
                 return false;
@@ -112,8 +111,8 @@ bool Console::proccessCommand(const std::string &command_line,
             int width, height;
             double rate;
             ss >> height >> width >> rate;
-            this->_board->setSize(width, height);
-            bool success = this->_board->randomMinesRate(rate);
+            this->_board.setSize(width, height);
+            bool success = this->_board.randomMinesRate(rate);
             result = success ? "Success" : "Failed";
             return true;
         }
@@ -126,12 +125,12 @@ bool Console::proccessCommand(const std::string &command_line,
     }
     else if ( command == "StartGame" )
     {
-        if ( this->_board->getState() != TGameState::Standby )
+        if ( this->_board.getState() != TGameState::Standby )
         {
             result = "Failed";
             return false;
         }
-        bool success = this->_board->start();
+        bool success = this->_board.start();
         result = success ? "Success" : "Failed";
         return true;
     }
@@ -141,37 +140,37 @@ bool Console::proccessCommand(const std::string &command_line,
         ss >> printMode;
         if ( printMode == "GameBoard" )
         {
-            result = '\n' + this->_board->getBoardInString();
+            result = '\n' + this->_board.getBoardInString();
             return true;
         }
         else if ( printMode == "GameAnswer" )
         {
-            result = '\n' + this->_board->getBoardWithoutCoverInString();
+            result = '\n' + this->_board.getBoardWithoutCoverInString();
             return true;
         }
         else if ( printMode == "GameState" )
         {
-            result = this->_board->getStateInString();
+            result = this->_board.getStateInString();
             return true;
         }
         else if ( printMode == "BombCount" )
         {
-            result = std::to_string(this->_board->getMineCount());
+            result = std::to_string(this->_board.getMineCount());
             return true;
         }
         else if ( printMode == "FlagCount" )
         {
-            result = std::to_string(this->_board->getFlagCount());
+            result = std::to_string(this->_board.getFlagCount());
             return true;
         }
         else if ( printMode == "OpenBlankCount" )
         {
-            result = std::to_string(this->_board->getOpenBlankCount());
+            result = std::to_string(this->_board.getOpenBlankCount());
             return true;
         }
         else if ( printMode == "RemainBlankCount" )
         {
-            result = std::to_string(this->_board->getRemainBlankCount());
+            result = std::to_string(this->_board.getRemainBlankCount());
             return true;
         }
         else
@@ -182,19 +181,19 @@ bool Console::proccessCommand(const std::string &command_line,
     }
     else if ( command == "LeftClick" )
     {
-        if ( this->_board->getState() != TGameState::Playing )
+        if ( this->_board.getState() != TGameState::Playing )
         {
             result = "Failed";
             return false;
         }
         Pos pos;
         ss >> pos.y >> pos.x;
-        bool success = this->_board->action(pos, false);
+        bool success = this->_board.action(pos, false);
         result = success ? "Success" : "Failed";
-        if ( success && this->_board->getState() == TGameState::GameOver )
+        if ( success && this->_board.getState() == TGameState::GameOver )
         {
             result += "\n";
-            result += (this->_board->getWin() == TWin::Won)
+            result += (this->_board.getWin() == TWin::Won)
                           ? "You win the game"
                           : "You lose the game";
         }
@@ -202,31 +201,31 @@ bool Console::proccessCommand(const std::string &command_line,
     }
     else if ( command == "RightClick" )
     {
-        if ( this->_board->getState() != TGameState::Playing )
+        if ( this->_board.getState() != TGameState::Playing )
         {
             result = "Failed";
             return false;
         }
         Pos pos;
         ss >> pos.y >> pos.x;
-        bool success = this->_board->action(pos, true);
+        bool success = this->_board.action(pos, true);
         result = success ? "Success" : "Failed";
         return true;
     }
     else if ( command == "Replay" )
     {
-        if ( this->_board->getState() != TGameState::GameOver )
+        if ( this->_board.getState() != TGameState::GameOver )
         {
             result = "Failed";
             return false;
         }
-        this->_board->clear();
+        this->_board.clear();
         result = "Success";
         return true;
     }
     else if ( command == "Quit" )
     {
-        if ( this->_board->getState() != TGameState::GameOver )
+        if ( this->_board.getState() != TGameState::GameOver )
         {
             result = "Failed";
             return false;
@@ -243,33 +242,33 @@ bool Console::proccessCommand(const std::string &command_line,
 
     //     if ( command == "clear" )
     //     {
-    //         this->_board->clear();
+    //         this->_board.clear();
     //         return true;
     //     }
     //     else if ( command == "setSize" )
     //     {
     //         size_t width, height;
     //         ss >> width >> height;
-    //         this->_board->setSize(width, height);
+    //         this->_board.setSize(width, height);
     //         return true;
     //     }
     //     else if ( command == "putMine" )
     //     {
     //         int x, y;
     //         ss >> x >> y;
-    //         this->_board->putMine(Pos(x, y));
+    //         this->_board.putMine(Pos(x, y));
     //         return true;
     //     }
     //     else if ( command == "calcMines" )
     //     {
-    //         this->_board->calcMines();
+    //         this->_board.calcMines();
     //         return true;
     //     }
     //     else if ( command == "uncover" )
     //     {
     //         Pos pos;
     //         ss >> pos.x >> pos.y;
-    //         this->_board->uncover(pos);
+    //         this->_board.uncover(pos);
     //         return true;
     //     }
     //     else

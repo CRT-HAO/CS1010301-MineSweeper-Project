@@ -1,7 +1,15 @@
 #include "gui/GUI.h"
 
+#include "core/BoardFile.hpp"
+
+#include <iostream>
+
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 400
+
+using namespace minesweeper;
+
+Board _board;
 
 GUI::GUI()
 {
@@ -121,23 +129,34 @@ void GUI::OnDOMReady(ultralight::View *caller,
     // JavaScriptCore C API.
     JSContextRef ctx = context->ctx();
 
-    // Create a JavaScript String containing the name of our callback.
-    JSStringRef name = JSStringCreateWithUTF8CString("GetMessage");
-
-    // Create a garbage-collected JavaScript function that is bound to our
-    // native C callback 'GetMessage()'.
-    JSObjectRef func = JSObjectMakeFunctionWithCallback(ctx, name,
-                                                        GUI::GetMessage);
-
     // Get the global JavaScript object (aka 'window')
     JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
 
+    // Create a JavaScript String containing the name of our callback.
+    JSStringRef name_GetMessage = JSStringCreateWithUTF8CString("GetMessage");
+
+    // Create a garbage-collected JavaScript function that is bound to our
+    // native C callback 'GetMessage()'.
+    JSObjectRef func_GetMessage =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetMessage, GUI::GetMessage);
+
     // Store our function in the page's global JavaScript object so that it
     // accessible from the page as 'OnButtonClick()'.
-    JSObjectSetProperty(ctx, globalObj, name, func, 0, 0);
+    JSObjectSetProperty(ctx, globalObj, name_GetMessage, func_GetMessage, 0, 0);
+
+    /**
+     * LoadBoard
+     */
+    JSStringRef name_LoadBoard = JSStringCreateWithUTF8CString("LoadBoard");
+
+    JSObjectRef func_LoadBoard =
+        JSObjectMakeFunctionWithCallback(ctx, name_LoadBoard, GUI::LoadBoard);
+
+    JSObjectSetProperty(ctx, globalObj, name_LoadBoard, func_LoadBoard, 0, 0);
 
     // Release the JavaScript String we created earlier.
-    JSStringRelease(name);
+    JSStringRelease(name_GetMessage);
+    JSStringRelease(name_LoadBoard);
 }
 
 void GUI::OnChangeCursor(ultralight::View *caller,
@@ -163,7 +182,8 @@ void GUI::OnChangeTitle(ultralight::View *caller,
 }
 
 JSValueRef GUI::GetMessage(JSContextRef ctx, JSObjectRef function,
-                           JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[],
+                           JSObjectRef thisObject, size_t argumentCount,
+                           const JSValueRef arguments[],
                            JSValueRef *exception)
 {
 
@@ -195,4 +215,42 @@ JSValueRef GUI::GetMessage(JSContextRef ctx, JSObjectRef function,
     JSStringRelease(str);
 
     return value;
+}
+
+JSValueRef GUI::LoadBoard(JSContextRef ctx, JSObjectRef function,
+                          JSObjectRef thisObject, size_t argumentCount,
+                          const JSValueRef arguments[],
+                          JSValueRef *exception)
+{
+    if ( argumentCount < 1 )
+        return (JSValueRef)JSValueMakeBoolean(ctx, false);
+
+    if ( !JSValueIsNumber(ctx, arguments[0]) )
+        return (JSValueRef)JSValueMakeBoolean(ctx, false);
+
+    int loadMode = int(JSValueToNumber(ctx, arguments[0], exception));
+
+    bool success = false;
+
+    switch ( loadMode )
+    {
+    case 0:
+        if ( argumentCount < 2 )
+        {
+            success = false;
+            break;
+        }
+        JSStringRef js_boardFilePath = JSValueToStringCopy(ctx, arguments[1],
+                                                           exception);
+        char boardFilePath[1024];
+        JSStringGetUTF8CString(js_boardFilePath, boardFilePath, 1024);
+        std::cout << boardFilePath << std::endl;
+        BoardFile boardFile(boardFilePath);
+        success = _board.loadBoardFile(boardFile);
+        break;
+    }
+
+    JSValueRef r = JSValueMakeBoolean(ctx, success);
+
+    return r;
 }

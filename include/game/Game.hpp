@@ -1,7 +1,6 @@
 #pragma once
 
 #include "console/Console.hpp"
-#include "core/Board.hpp"
 #include "gui/GUI.h"
 
 namespace minesweeper
@@ -10,7 +9,6 @@ namespace minesweeper
     class Game
     {
     private:
-        Board *_board;
         Console *_console;
         GUI *_gui;
         bool _enableConsole{false};
