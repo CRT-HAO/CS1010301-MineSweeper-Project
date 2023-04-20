@@ -50,7 +50,7 @@ namespace minesweeper
         char getChar() const
         {
             if ( this->_flag )
-                return 'F';
+                return 'f';
 
             if ( this->_question_mark )
                 return '?';
