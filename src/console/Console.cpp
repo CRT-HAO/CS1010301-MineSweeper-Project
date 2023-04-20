@@ -179,7 +179,7 @@ bool Console::proccessCommand(const std::string &command_line,
             return false;
         }
         Pos pos;
-        ss >> pos.x >> pos.y;
+        ss >> pos.y >> pos.x;
         bool success = this->_board->action(pos, false);
         result = success ? "Success" : "Failed";
         return success;
@@ -192,7 +192,7 @@ bool Console::proccessCommand(const std::string &command_line,
             return false;
         }
         Pos pos;
-        ss >> pos.x >> pos.y;
+        ss >> pos.y >> pos.x;
         bool success = this->_board->action(pos, true);
         result = success ? "Success" : "Failed";
         return success;
