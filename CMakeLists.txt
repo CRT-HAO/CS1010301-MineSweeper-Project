@@ -41,7 +41,9 @@ if(PORT MATCHES "UltralightMac")
     SET(CMAKE_INSTALL_RPATH "@executable_path/")
 endif()
 
-add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE ${SRC_DIR}/main.cpp)
+add_executable(${APP_NAME} MACOSX_BUNDLE ${SRC_DIR}/main.cpp)
+
+# add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE ${SRC_DIR}/main.cpp)
 target_link_libraries(${APP_NAME} PRIVATE Game)
 
 if(APPLE)
