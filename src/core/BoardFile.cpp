@@ -13,16 +13,16 @@ void BoardFile::_parse()
         return;
 
     this->_board.clear();
-    this->_ifs >> this->_boardWidth >> this->_boardHeight;
+    this->_ifs >> this->_boardHeight >> this->_boardWidth;
     this->_board.resize(this->_boardHeight,
                         std::vector<TField>(this->_boardWidth, TField::None));
 
     std::vector<std::string> readLine;
     readLine.resize(this->_boardHeight);
-    for ( size_t i = 0; i < this->_boardWidth; i++ )
+    for ( size_t i = 0; i < this->_boardHeight; i++ )
     {
         this->_ifs >> readLine[i];
-        for ( size_t j = 0; j < this->_boardHeight; j++ )
+        for ( size_t j = 0; j < this->_boardWidth; j++ )
         {
             this->_board[i][j] =
                 (readLine[i][j] == 'X') ? TField::Mine : TField::None;
