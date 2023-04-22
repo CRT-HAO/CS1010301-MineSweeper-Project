@@ -65,4 +65,44 @@ private:
                                 JSObjectRef thisObject, size_t argumentCount,
                                 const JSValueRef arguments[],
                                 JSValueRef *exception);
+
+    static JSValueRef GetBoardWidth(JSContextRef ctx, JSObjectRef function,
+                                    JSObjectRef thisObject, size_t argumentCount,
+                                    const JSValueRef arguments[],
+                                    JSValueRef *exception);
+
+    static JSValueRef GetBoardHeight(JSContextRef ctx, JSObjectRef function,
+                                     JSObjectRef thisObject, size_t argumentCount,
+                                     const JSValueRef arguments[],
+                                     JSValueRef *exception);
+
+    static JSValueRef GetBoardGameState(JSContextRef ctx, JSObjectRef function,
+                                        JSObjectRef thisObject, size_t argumentCount,
+                                        const JSValueRef arguments[],
+                                        JSValueRef *exception);
+
+    static JSValueRef GetBoardWin(JSContextRef ctx, JSObjectRef function,
+                                  JSObjectRef thisObject, size_t argumentCount,
+                                  const JSValueRef arguments[],
+                                  JSValueRef *exception);
+
+    static JSValueRef BoardStartGame(JSContextRef ctx, JSObjectRef function,
+                                     JSObjectRef thisObject, size_t argumentCount,
+                                     const JSValueRef arguments[],
+                                     JSValueRef *exception);
+
+    static JSValueRef BoardReplay(JSContextRef ctx, JSObjectRef function,
+                                  JSObjectRef thisObject, size_t argumentCount,
+                                  const JSValueRef arguments[],
+                                  JSValueRef *exception);
+
+    static JSValueRef BoardAction(JSContextRef ctx, JSObjectRef function,
+                                  JSObjectRef thisObject, size_t argumentCount,
+                                  const JSValueRef arguments[],
+                                  JSValueRef *exception);
+
+    static JSValueRef GetBoardFieldInChar(JSContextRef ctx, JSObjectRef function,
+                                          JSObjectRef thisObject, size_t argumentCount,
+                                          const JSValueRef arguments[],
+                                          JSValueRef *exception);
 };

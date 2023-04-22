@@ -33,6 +33,11 @@ namespace minesweeper
 
         inline const Board_t &get() const { return this->_board; }
 
+        inline const Field &getField(const Pos &pos) const
+        {
+            return this->_board[pos.y][pos.x];
+        }
+
         inline bool inside(const Pos &pos) const
         {
             return (pos.x >= 0 && pos.y >= 0) &&
@@ -40,6 +45,19 @@ namespace minesweeper
         }
 
         inline const TWin &getWin() const { return this->_win; }
+
+        inline std::string getWinInString() const
+        {
+            switch ( this->_win )
+            {
+            case TWin::None:
+                return "None";
+            case TWin::Win:
+                return "Win";
+            case TWin::Lose:
+                return "Lose";
+            }
+        }
 
         inline const TGameState &getState() const { return this->_state; }
 
@@ -81,7 +99,7 @@ namespace minesweeper
         bool coverAll();
 
         bool action(const Pos &pos, bool right_click);
-        
+
         // 取得目前炸彈數量
         int getMineCount();
 

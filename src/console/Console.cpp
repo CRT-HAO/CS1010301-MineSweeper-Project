@@ -193,7 +193,7 @@ bool Console::proccessCommand(const std::string &command_line,
         if ( success && this->_board.getState() == TGameState::GameOver )
         {
             result += "\n";
-            result += (this->_board.getWin() == TWin::Won)
+            result += (this->_board.getWin() == TWin::Win)
                           ? "You win the game"
                           : "You lose the game";
         }

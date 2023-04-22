@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 400
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 using namespace minesweeper;
 
@@ -15,7 +15,7 @@ GUI::GUI()
 {
     Settings settings;
 
-    settings.force_cpu_renderer = true;
+    settings.force_cpu_renderer = false;
 
     ///
     /// Create our main App instance.
@@ -154,9 +154,97 @@ void GUI::OnDOMReady(ultralight::View *caller,
 
     JSObjectSetProperty(ctx, globalObj, name_LoadBoard, func_LoadBoard, 0, 0);
 
+    /**
+     * GetBoardWidth
+     */
+    JSStringRef name_GetBoardWidth = JSStringCreateWithUTF8CString("GetBoardWidth");
+
+    JSObjectRef func_GetBoardWidth =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetBoardWidth, GUI::GetBoardWidth);
+
+    JSObjectSetProperty(ctx, globalObj, name_GetBoardWidth, func_GetBoardWidth, 0, 0);
+
+    /**
+     * GetBoardHeight
+     */
+    JSStringRef name_GetBoardHeight = JSStringCreateWithUTF8CString("GetBoardHeight");
+
+    JSObjectRef func_GetBoardHeight =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetBoardHeight, GUI::GetBoardHeight);
+
+    JSObjectSetProperty(ctx, globalObj, name_GetBoardHeight, func_GetBoardHeight, 0, 0);
+
+    /**
+     * GetBoardGameState
+     */
+    JSStringRef name_GetBoardGameState = JSStringCreateWithUTF8CString("GetBoardGameState");
+
+    JSObjectRef func_GetBoardGameState =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetBoardGameState, GUI::GetBoardGameState);
+
+    JSObjectSetProperty(ctx, globalObj, name_GetBoardGameState, func_GetBoardGameState, 0, 0);
+
+    /**
+     * GetBoardWin
+     */
+    JSStringRef name_GetBoardWin = JSStringCreateWithUTF8CString("GetBoardWin");
+
+    JSObjectRef func_GetBoardWin =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetBoardWin, GUI::GetBoardWin);
+
+    JSObjectSetProperty(ctx, globalObj, name_GetBoardWin, func_GetBoardWin, 0, 0);
+
+    /**
+     * BoardStartGame
+     */
+    JSStringRef name_BoardStartGame = JSStringCreateWithUTF8CString("BoardStartGame");
+
+    JSObjectRef func_BoardStartGame =
+        JSObjectMakeFunctionWithCallback(ctx, name_BoardStartGame, GUI::BoardStartGame);
+
+    JSObjectSetProperty(ctx, globalObj, name_BoardStartGame, func_BoardStartGame, 0, 0);
+
+    /**
+     * BoardReplay
+     */
+    JSStringRef name_BoardReplay = JSStringCreateWithUTF8CString("BoardReplay");
+
+    JSObjectRef func_BoardReplay =
+        JSObjectMakeFunctionWithCallback(ctx, name_BoardReplay, GUI::BoardReplay);
+
+    JSObjectSetProperty(ctx, globalObj, name_BoardReplay, func_BoardReplay, 0, 0);
+
+    /**
+     * BoardAction
+     */
+    JSStringRef name_BoardAction = JSStringCreateWithUTF8CString("BoardAction");
+
+    JSObjectRef func_BoardAction =
+        JSObjectMakeFunctionWithCallback(ctx, name_BoardAction, GUI::BoardAction);
+
+    JSObjectSetProperty(ctx, globalObj, name_BoardAction, func_BoardAction, 0, 0);
+
+    /**
+     * GetBoardFieldInChar
+     */
+    JSStringRef name_GetBoardFieldInChar = JSStringCreateWithUTF8CString("GetBoardFieldInChar");
+
+    JSObjectRef func_GetBoardFieldInChar =
+        JSObjectMakeFunctionWithCallback(ctx, name_GetBoardFieldInChar, GUI::GetBoardFieldInChar);
+
+    JSObjectSetProperty(ctx, globalObj, name_GetBoardFieldInChar, func_GetBoardFieldInChar, 0, 0);
+
     // Release the JavaScript String we created earlier.
     JSStringRelease(name_GetMessage);
     JSStringRelease(name_LoadBoard);
+    JSStringRelease(name_GetBoardWidth);
+    JSStringRelease(name_GetBoardHeight);
+    JSStringRelease(name_GetBoardGameState);
+    JSStringRelease(name_GetBoardWin);
+    JSStringRelease(name_BoardStartGame);
+    JSStringRelease(name_BoardReplay);
+    JSStringRelease(name_BoardAction);
+    JSStringRelease(name_GetBoardFieldInChar);
 }
 
 void GUI::OnChangeCursor(ultralight::View *caller,
@@ -222,35 +310,223 @@ JSValueRef GUI::LoadBoard(JSContextRef ctx, JSObjectRef function,
                           const JSValueRef arguments[],
                           JSValueRef *exception)
 {
+    JSValueRef f = JSValueMakeBoolean(ctx, false);
+
     if ( argumentCount < 1 )
-        return (JSValueRef)JSValueMakeBoolean(ctx, false);
+        return f;
 
     if ( !JSValueIsNumber(ctx, arguments[0]) )
-        return (JSValueRef)JSValueMakeBoolean(ctx, false);
+        return f;
 
     int loadMode = int(JSValueToNumber(ctx, arguments[0], exception));
 
     bool success = false;
 
-    switch ( loadMode )
+    if ( loadMode == 0 )
     {
-    case 0:
         if ( argumentCount < 2 )
         {
-            success = false;
-            break;
+            return f;
         }
         JSStringRef js_boardFilePath = JSValueToStringCopy(ctx, arguments[1],
                                                            exception);
         char boardFilePath[1024];
         JSStringGetUTF8CString(js_boardFilePath, boardFilePath, 1024);
-        std::cout << boardFilePath << std::endl;
+        std::cout << "Load BoardFile " << boardFilePath << std::endl;
         BoardFile boardFile(boardFilePath);
         success = _board.loadBoardFile(boardFile);
-        break;
+    }
+    else if ( loadMode == 1 )
+    {
+        if ( argumentCount < 4 )
+        {
+            return f;
+        }
+        int width = JSValueToNumber(ctx, arguments[1], exception);
+        int height = JSValueToNumber(ctx, arguments[2], exception);
+        int minesCount = JSValueToNumber(ctx, arguments[3], exception);
+        std::cout << "Load RandomCount "
+                  << width << " " << height << " " << minesCount << std::endl;
+        _board.setSize(width, height);
+        success = _board.randomMinesCount(minesCount);
+    }
+    else if ( loadMode == 2 )
+    {
+        if ( argumentCount < 4 )
+        {
+            return f;
+        }
+        int width = JSValueToNumber(ctx, arguments[1], exception);
+        int height = JSValueToNumber(ctx, arguments[2], exception);
+        double minesRate = JSValueToNumber(ctx, arguments[3], exception);
+        std::cout << "Load RandomCount "
+                  << width << " " << height << " " << minesRate << std::endl;
+        _board.setSize(width, height);
+        success = _board.randomMinesRate(minesRate);
     }
 
+    if ( success )
+        std::cout << "BoardAnswer=" << std::endl
+                  << _board.getBoardWithoutCoverInString() << std::endl;
+
     JSValueRef r = JSValueMakeBoolean(ctx, success);
+
+    return r;
+}
+
+JSValueRef GUI::GetBoardWidth(JSContextRef ctx, JSObjectRef function,
+                              JSObjectRef thisObject, size_t argumentCount,
+                              const JSValueRef arguments[],
+                              JSValueRef *exception)
+{
+    size_t width = _board.w();
+
+    JSValueRef r = JSValueMakeNumber(ctx, width);
+
+    return r;
+}
+
+JSValueRef GUI::GetBoardHeight(JSContextRef ctx, JSObjectRef function,
+                               JSObjectRef thisObject, size_t argumentCount,
+                               const JSValueRef arguments[],
+                               JSValueRef *exception)
+{
+    size_t height = _board.h();
+
+    JSValueRef r = JSValueMakeNumber(ctx, height);
+
+    return r;
+}
+
+JSValueRef GUI::GetBoardGameState(JSContextRef ctx, JSObjectRef function,
+                                  JSObjectRef thisObject, size_t argumentCount,
+                                  const JSValueRef arguments[],
+                                  JSValueRef *exception)
+{
+    std::string state = _board.getStateInString();
+
+    JSStringRef r_str = JSStringCreateWithUTF8CString(state.c_str());
+    JSValueRef r = JSValueMakeString(ctx, r_str);
+    JSStringRelease(r_str);
+
+    return r;
+}
+
+JSValueRef GUI::GetBoardWin(JSContextRef ctx, JSObjectRef function,
+                            JSObjectRef thisObject, size_t argumentCount,
+                            const JSValueRef arguments[],
+                            JSValueRef *exception)
+{
+    std::string win = _board.getWinInString();
+
+    JSStringRef r_str = JSStringCreateWithUTF8CString(win.c_str());
+    JSValueRef r = JSValueMakeString(ctx, r_str);
+    JSStringRelease(r_str);
+
+    return r;
+}
+
+JSValueRef GUI::BoardStartGame(JSContextRef ctx, JSObjectRef function,
+                               JSObjectRef thisObject, size_t argumentCount,
+                               const JSValueRef arguments[],
+                               JSValueRef *exception)
+{
+    bool success = _board.start();
+
+    JSValueRef r = JSValueMakeBoolean(ctx, success);
+
+    return r;
+}
+
+JSValueRef GUI::BoardReplay(JSContextRef ctx, JSObjectRef function,
+                            JSObjectRef thisObject, size_t argumentCount,
+                            const JSValueRef arguments[],
+                            JSValueRef *exception)
+{
+    _board.clear();
+
+    JSValueRef r = JSValueMakeBoolean(ctx, true);
+
+    return r;
+}
+
+JSValueRef GUI::BoardAction(JSContextRef ctx, JSObjectRef function,
+                            JSObjectRef thisObject, size_t argumentCount,
+                            const JSValueRef arguments[],
+                            JSValueRef *exception)
+{
+    JSValueRef f = JSValueMakeBoolean(ctx, false);
+
+    if ( argumentCount < 3 )
+        return f;
+
+    // x
+    if ( !JSValueIsNumber(ctx, arguments[0]) )
+        return f;
+
+    // y
+    if ( !JSValueIsNumber(ctx, arguments[1]) )
+        return f;
+
+    // right_click
+    if ( !JSValueIsBoolean(ctx, arguments[2]) )
+        return f;
+
+    Pos pos;
+
+    pos.x = JSValueToNumber(ctx, arguments[0], exception);
+    pos.y = JSValueToNumber(ctx, arguments[1], exception);
+
+    if ( !_board.inside(pos) )
+        return f;
+
+    bool right_click = JSValueToBoolean(ctx, arguments[2]);
+
+    bool success = _board.action(pos, right_click);
+
+    std::cout << "Board=" << std::endl
+              << _board.getBoardInString() << std::endl;
+
+    JSValueRef r = JSValueMakeBoolean(ctx, success);
+
+    return r;
+}
+
+JSValueRef GUI::GetBoardFieldInChar(JSContextRef ctx, JSObjectRef function,
+                                    JSObjectRef thisObject, size_t argumentCount,
+                                    const JSValueRef arguments[],
+                                    JSValueRef *exception)
+{
+    JSStringRef f_str = JSStringCreateWithUTF8CString(" ");
+    JSValueRef f = JSValueMakeString(ctx, f_str);
+    JSStringRelease(f_str);
+
+    if ( argumentCount < 2 )
+        return f;
+
+    // x
+    if ( !JSValueIsNumber(ctx, arguments[0]) )
+        return f;
+
+    // y
+    if ( !JSValueIsNumber(ctx, arguments[1]) )
+        return f;
+
+    Pos pos;
+
+    pos.x = JSValueToNumber(ctx, arguments[0], exception);
+    pos.y = JSValueToNumber(ctx, arguments[1], exception);
+
+    if ( !_board.inside(pos) )
+        return f;
+
+    char c = _board.getField(pos).getChar();
+
+    char r_char[1] = {c};
+
+    JSStringRef r_str = JSStringCreateWithUTF8CString(r_char);
+    JSValueRef r = JSValueMakeString(ctx, r_str);
+    JSStringRelease(r_str);
 
     return r;
 }

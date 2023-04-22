@@ -109,6 +109,7 @@ bool Board::uncover(const Pos &pos)
         return false;
 
     (*this)(pos).setCovered(false);
+    (*this)(pos).removeFlags();
 
     if ( (*this)(pos).isMine() )
         return true;
@@ -234,7 +235,7 @@ bool Board::action(const Pos &pos, bool right_click)
         {
             this->uncoverAll();
             this->_state = TGameState::GameOver;
-            this->_win = TWin::Loose;
+            this->_win = TWin::Lose;
             return true;
         }
 
@@ -253,7 +254,7 @@ const TGameState &Board::updateGameState()
 
     if ( this->getRemainBlankCount() == 0 )
     {
-        this->_win = TWin::Won;
+        this->_win = TWin::Win;
         this->_state = TGameState::GameOver;
     }
 

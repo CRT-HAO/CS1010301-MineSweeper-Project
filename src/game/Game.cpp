@@ -31,6 +31,11 @@ Game::Game(int argc, char *argv[])
             this->_gui = new GUI();
         }
     }
+    else
+    {
+        this->_enableGUI = true;
+        this->_gui = new GUI();
+    }
 }
 
 Game::~Game()

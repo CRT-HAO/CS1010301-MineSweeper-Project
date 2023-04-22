@@ -4,10 +4,10 @@ namespace minesweeper
 {
 
     enum class TWin
-    { 
+    {
         None,
-        Won,
-        Loose
+        Win,
+        Lose
     };
 
 }
