@@ -244,6 +244,8 @@ function updateBoard() {
         else if (c == charToInt("3"))
           block_inside.addClass("block-inside-three");
         else block_inside.addClass("block-inside-four");
+      } else {
+        field.text("");
       }
     }
   });
