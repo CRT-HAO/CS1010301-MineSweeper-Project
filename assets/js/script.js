@@ -1,32 +1,40 @@
 const BLOCK_HTML =
   '<td><div class="block"><div class="block-inside block-cover"><div class="block-field"></div></div></td>';
 
-function GetBoardWidth() {
-  return 9;
+// function GetBoardWidth() {
+//   return 9;
+// }
+
+// function GetBoardHeight() {
+//   return 9;
+// }
+
+// function LoadBoard() {
+//   return true;
+// }
+
+// function BoardStartGame() {
+//   return true;
+// }
+
+// function GetBoardGameState() {
+//   return "Playing";
+// }
+
+// function BoardAction(x, y, right_click) {
+//   return true;
+// }
+
+// function GetBoardFieldInChar(x, y) {
+//   return "#";
+// }
+
+function charToInt(char) {
+  return char.charCodeAt(0);
 }
 
-function GetBoardHeight() {
-  return 9;
-}
-
-function LoadBoard() {
-  return true;
-}
-
-function BoardStartGame() {
-  return true;
-}
-
-function GetBoardGameState() {
-  return "Playing";
-}
-
-function BoardAction(x, y, right_click) {
-  return true;
-}
-
-function GetBoardFieldInChar(x, y) {
-  return "#";
+function intToChar(int) {
+  return String.fromCharCode(int);
 }
 
 function winAnimation() {
@@ -215,24 +223,26 @@ function updateBoard() {
   $("#board > tbody div.block").each(function (i) {
     let x = parseInt($(this).attr("ms-block-x"));
     let y = parseInt($(this).attr("ms-block-y"));
-    let c = GetBoardFieldInChar(x, y).charAt(0);
+    let c = GetBoardFieldInChar(x, y);
     let block_inside = $(this).find("div.block-inside");
     let field = block_inside.find("div.block-field");
-    if (c == "#" || c == "f" || c == "?") {
+    if (c == charToInt("#") || c == charToInt("f") || c == charToInt("?")) {
       block_inside.addClass("block-cover");
-      if (c == "f") field.html(`<i class="fa-solid fa-flag"></i>`);
-      else if (c == "?") field.html(`<i class="fa-solid fa-question"></i>`);
+      if (c == charToInt("f")) field.html(`<i class="fa-solid fa-flag"></i>`);
+      else if (c == charToInt("?"))
+        field.html(`<i class="fa-solid fa-question"></i>`);
       else field.empty();
     } else {
       block_inside.removeClass("block-cover");
-      if (c == "X") {
+      if (c == charToInt("X")) {
         field.html(`<i class="fa-solid fa-bomb"></i>`);
         block_inside.addClass("block-inside-mine");
-      } else if (c != "0") {
-        field.text(c);
-        if (c == "1") block_inside.addClass("block-inside-one");
-        else if (c == "2") block_inside.addClass("block-inside-two");
-        else if (c == "3") block_inside.addClass("block-inside-three");
+      } else if (c != charToInt("0")) {
+        field.text(intToChar(c));
+        if (c == charToInt("1")) block_inside.addClass("block-inside-one");
+        else if (c == charToInt("2")) block_inside.addClass("block-inside-two");
+        else if (c == charToInt("3"))
+          block_inside.addClass("block-inside-three");
         else block_inside.addClass("block-inside-four");
       }
     }

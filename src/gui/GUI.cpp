@@ -497,9 +497,7 @@ JSValueRef GUI::GetBoardFieldInChar(JSContextRef ctx, JSObjectRef function,
                                     const JSValueRef arguments[],
                                     JSValueRef *exception)
 {
-    JSStringRef f_str = JSStringCreateWithUTF8CString(" ");
-    JSValueRef f = JSValueMakeString(ctx, f_str);
-    JSStringRelease(f_str);
+    JSValueRef f = JSValueMakeNumber(ctx, '!');
 
     if ( argumentCount < 2 )
         return f;
@@ -522,11 +520,7 @@ JSValueRef GUI::GetBoardFieldInChar(JSContextRef ctx, JSObjectRef function,
 
     char c = _board.getField(pos).getChar();
 
-    char r_char[1] = {c};
-
-    JSStringRef r_str = JSStringCreateWithUTF8CString(r_char);
-    JSValueRef r = JSValueMakeString(ctx, r_str);
-    JSStringRelease(r_str);
+    JSValueRef r = JSValueMakeNumber(ctx, c);
 
     return r;
 }
