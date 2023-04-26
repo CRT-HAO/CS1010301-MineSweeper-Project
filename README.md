@@ -171,3 +171,6 @@ Current covered block count in the board.
 <img width="868" alt="截圖 2023-04-23 上午7 55 24" src="https://user-images.githubusercontent.com/31580253/234449965-5b32774a-7c07-4f1f-9e9f-1f61772d15a8.png">
 <img width="868" alt="截圖 2023-04-23 上午7 55 15" src="https://user-images.githubusercontent.com/31580253/234449976-c441d4d1-d7b7-4b60-98de-2e1582912636.png">
 <img width="868" alt="截圖 2023-04-23 上午7 54 38" src="https://user-images.githubusercontent.com/31580253/234449990-08a5d0c5-596d-4e06-93a0-41c11d3343c6.png">
+
+## Demo Video
+[Watch on YouTube](https://youtu.be/PEyo_t_J6iI)
