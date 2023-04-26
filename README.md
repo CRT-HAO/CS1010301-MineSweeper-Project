@@ -35,11 +35,11 @@ By default run the game it running in GUI mode.
 ```
 
 ## Game State
-<img width="781" alt="image" src="https://user-images.githubusercontent.com/31580253/234452612-ab8d8e00-fe6e-4b0f-9fdb-510934f259b9.png">  
+<img width="781" alt="image" src="https://user-images.githubusercontent.com/31580253/234464293-62be78a8-24e2-4d74-9960-65d4d4da0556.png">
 
- - Standby 待命狀態
- - Playing 遊玩狀態
- - GameOver 遊戲結束
+ - Standby
+ - Playing
+ - GameOver
 
 ## Command
 | Command      | Usage                              | Standby | Playing | GameOver |
