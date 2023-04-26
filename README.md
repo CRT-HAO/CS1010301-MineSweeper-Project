@@ -1,6 +1,6 @@
 # CS1010301-MineSweeper-Project
  111.2 CS1010301 物件導向程式設計實習 踩地雷遊戲.  
- MineSweeper game writing in C++.  
+ MineSweeper game with GUI supported, writing in C++.  
  <img width="868" alt="截圖 2023-04-23 上午7 55 57" src="https://user-images.githubusercontent.com/31580253/234451668-15293e6a-b9d6-4c85-b69a-f1e741adb53f.png">
 
 ## Support Platforms
