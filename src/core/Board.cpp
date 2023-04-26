@@ -1,3 +1,12 @@
+/**
+ *  File: Board.cpp
+ *  Author: 張皓鈞(HAO) m831718@gmail.com
+ *  Create Date: 2023/04/20 16:47:53
+ *  Editor: 張皓鈞(HAO) m831718@gmail.com
+ *  Update Date: 2023/04/26 11:53:09
+ *  Description: MineSweeper Game Board
+ */
+
 #include "core/Board.hpp"
 
 #include <random>

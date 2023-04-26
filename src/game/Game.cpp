@@ -1,3 +1,12 @@
+/**
+ *  File: Game.cpp
+ *  Author: 張皓鈞(HAO) m831718@gmail.com
+ *  Create Date: 2023/04/22 20:39:44
+ *  Editor: 張皓鈞(HAO) m831718@gmail.com
+ *  Update Date: 2023/04/26 11:54:59
+ *  Description: MineSweeper Game Entry
+ */
+
 #include "game/Game.hpp"
 
 #include <iostream>

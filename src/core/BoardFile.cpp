@@ -1,3 +1,12 @@
+/**
+ *  File: BoardFile.cpp
+ *  Author: 張皓鈞(HAO) m831718@gmail.com
+ *  Create Date: 2023/04/20 01:36:52
+ *  Editor: 張皓鈞(HAO) m831718@gmail.com
+ *  Update Date: 2023/04/26 11:53:20
+ *  Description: Game Board File
+ */
+
 #include "core/BoardFile.hpp"
 
 #include <sstream>
